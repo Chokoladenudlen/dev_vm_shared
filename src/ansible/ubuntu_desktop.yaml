@@ -1,0 +1,18 @@
+- name: Install Ubuntu desktop & Configure keyboard & locale
+  hosts: all
+
+  pre_tasks:
+
+  - name: Upgrade APT packages  # Desktop install fails w/o this
+    apt:
+      update_cache: yes
+      upgrade: yes
+    become: True
+
+
+  tasks:
+
+  - name: Install desktop
+    apt:
+      name: ubuntu-desktop
+    become: true

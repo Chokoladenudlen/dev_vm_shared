@@ -1,0 +1,25 @@
+- name: Install docker
+  hosts: all
+
+  tasks:
+  - name: Install docker
+    apt:
+      name: docker.io
+    become: true
+    notify:
+      - "Add '{{ user }}' to docker group"
+
+
+  - name: Run script to install docker compose v2
+    ansible.builtin.script: ../shell/install_docker_compose_v2.sh
+    become: true
+
+
+  handlers:
+  - name: "Add '{{ user }}' to docker group"
+# You must still log out/in for it to take effect! 🙃
+    user:
+      name: '{{ user }}'
+      groups: docker
+      append: yes
+    become: True

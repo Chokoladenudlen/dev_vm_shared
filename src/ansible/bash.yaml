@@ -1,0 +1,22 @@
+---
+- name: Configure .bashrc
+  hosts: all
+
+  tasks:
+  - name: Load SSH agent & add key when opening terminal
+    ansible.builtin.lineinfile:
+      path: ~/.bashrc
+      line: eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{{ sshkey }}
+      state: present
+      # create: yes
+    become_user: "{{ user }}"
+    become: true
+
+  - name: Change dir to /kode/ dir when opening terminal
+    ansible.builtin.lineinfile:
+      path: ~/.bashrc
+      line: cd /kode
+      state: present
+      # create: yes
+    become_user: "{{ user }}"
+    become: true

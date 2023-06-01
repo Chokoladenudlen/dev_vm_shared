@@ -1,0 +1,8 @@
+# Used in Vagrantfile ... if at all
+# I'm hoping to stop relying on galaxy roles, but I've had a hell of a time
+# recreating their effect. The surface changes are simple, but whoo-boy -
+# getting Linux to accept them when coming from ansible sure isn't (whereas
+# running the commands in a terminal inside the VM goes smooth as cake).
+---
+- src: gantsign.keyboard
+- src: oefenweb.locales

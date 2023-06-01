@@ -1,0 +1,25 @@
+- name: Terminals
+  hosts: all
+
+  tasks:
+
+  - name: Install Terminator
+    apt:
+      name: terminator
+    become: true
+
+  - name: Create Terminator config dir
+    file:
+      path: /home/{{ user }}/.config/terminator/
+      state: directory
+      owner: '{{ user }}'
+      group: '{{ user }}'
+      mode: 0775
+      recurse: yes
+    become: true
+
+  - name: Copy Terminator config file
+    copy:
+      src: ../deploy_files/terminator_config
+      dest: /home/{{ user }}/.config/terminator/config
+    become: true

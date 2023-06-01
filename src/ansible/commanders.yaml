@@ -1,0 +1,32 @@
+- name: Install file commanders
+  hosts: all
+
+  post_tasks:
+
+  - name: Map backspace to go up dir in MC
+    become: True
+    replace:
+      path: /etc/mc/mc.keymap
+      regexp: '# CdParentSmart ='
+      replace: 'CdParentSmart = backspace'
+
+  # wip: virker ikke, fordi ini kun laves når mc køres første gang
+  # - name: Hide command prompt in MC
+  #   become: True
+  #   replace:
+  #     path: /home/{{ user }}/.config/mc/ini
+  #     regexp: 'command_prompt=true'
+  #     replace: 'command_prompt=false'
+
+
+  tasks:
+
+  - name: Install Double Commander
+    apt:
+      name: doublecmd-gtk
+    become: true
+
+  - name: Install Midnight Commander
+    apt:
+      name: mc
+    become: true

@@ -1,0 +1,70 @@
+---
+- name: Install git
+  hosts: all 
+
+  # pre_tasks:
+  # - name: Add github.com to known SSH hosts
+  #   ansible.builtin.lineinfile:
+  #     dest: ~/.ssh/known_hosts
+  #     create: yes
+  #     state: present
+  #     line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+  #     regexp: "^github\\.com"
+  #   tags: test
+
+  tasks:
+  - name: install git
+    apt:
+      name: git
+    become: true
+
+  - name: "Set git user.email to {{ email }}"
+    git_config:
+      name: user.email
+      scope: global
+      value: "{{ email }}"
+    when: email is defined
+    become_user: "{{ user }}"
+    become: true
+      
+  - name: "Set git user.name to {{ fullname }}"
+    git_config:
+      name: user.name
+      scope: global
+      value: "{{ fullname }}"
+    when: fullname is defined
+    become_user: "{{ user }}"
+    become: true
+
+  - name: "Add git log alias"
+    git_config:
+      name: alias.log
+      scope: global
+      value: "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+    become_user: "{{ user }}"
+    become: true
+
+  - name: "Disable dubious ownership warning"  # Would warn on dirs mounted from host, since they are owned by vagrant user
+  # This is a potentially unsafe fix, since it assumes all directories are safe
+    git_config:
+      name: safe.directory
+      scope: global
+      value: "*"
+    become_user: "{{ user }}"
+    become: true
+
+  - name: "Add git log alias 'lo'"
+    git_config:
+      name: alias.lo
+      scope: global
+      value: "log --graph --abbrev-commit --decorate --format=format:'%C(auto)%h%d %s (%ar/%an)%C(reset)'"
+    become_user: "{{ user }}"
+    become: true
+
+  - name: "Add git log alias 'la = lo --all'"
+    git_config:
+      name: alias.la
+      scope: global
+      value: "lo --all"
+    become_user: "{{ user }}"
+    become: true

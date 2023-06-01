@@ -1,0 +1,67 @@
+- name: Create & setup user
+  hosts: all
+  # connection: local  # for testing w/o ssh
+
+  vars:
+    salt: '0JTl44hgf'  # user & pw come from Vagrantfile
+
+
+  pre_tasks:
+
+  - name: "Add user {{ user }}"
+    ansible.builtin.user:
+      name: "{{ user }}"
+      password: "{{pwd|password_hash('sha512', salt)}}"
+      groups: sudo, dialout
+      append: yes  # else user is removed from all groups not those mentioned above
+      shell: /bin/bash
+      update_password: on_create  # only set pw for newly created users
+      # create_home: yes  # yes er default
+    become: True
+
+  - name: "Create ~/.config/ & ~/.ssh/ for {{ user }}"
+    file:
+      path: '/home/{{ user }}/{{ item }}/'
+      state: directory
+      owner: '{{ user }}'
+      group: '{{ user }}'
+      mode: 0775
+      recurse: yes
+    become: true
+    loop:
+     - .config
+     - .ssh
+
+
+  # post_tasks:  # Untested!
+
+  # # B/c Wayland has graphics issues fx with 'sudo gedit':
+  # - name: Disable Wayland (forcing use of Xorg)
+  #   become: True
+  #   replace:
+  #     path: /etc/gdm3/custom.conf
+  #     regexp: '#WaylandEnable=false'
+  #     replace: 'WaylandEnable=false'
+
+
+  tasks:
+
+  - name: Disable Livepatch Setup Window on Boot
+  # https://www.faqforge.com/linux/command-and-shell-module-in-ansible-differences-and-practical-usage/
+    ansible.builtin.shell: 'echo "yes" >> /home/{{ user }}/.config/gnome-initial-setup-done'
+    # echo "yes" >> /home/mla/.config/gnome-initial-setup-done
+    become: true
+
+  - name: Enable auto-login option in general
+    become: True
+    replace:
+      path: /etc/gdm3/custom.conf
+      regexp: '#  AutomaticLoginEnable = true'
+      replace: 'AutomaticLoginEnable = true'
+
+  - name: Enable auto-login specifically for {{ user }}
+    become: True
+    replace:
+      path: /etc/gdm3/custom.conf
+      regexp: '#  AutomaticLogin = user1'
+      replace: 'AutomaticLogin = {{ user }}'

@@ -1,0 +1,66 @@
+---
+- name: Customize favorties bar
+  hosts: all 
+
+  tasks:
+
+  - name: Set favorites on the taskbar
+    command: 
+      argv: 
+        - gsettings 
+        - set 
+        - org.gnome.shell
+        - favorite-apps 
+        # - "[]"
+        - "['org.gnome.Nautilus.desktop', 'terminator.desktop', 'code_code.desktop']"
+    tags:
+      - taskbar
+      - ubuntu
+
+  - name: Place taskbar on bottom
+    command: 
+      argv: 
+        - gsettings 
+        - set 
+        - org.gnome.shell
+        - position 
+        - "Bottom"
+    tags:
+      - taskbar
+      - ubuntu
+
+  - name: Set taskbar to autohide
+    command: 
+      argv: 
+        - gsettings 
+        - set 
+        - org.gnome.shell
+        - autohide 
+        - "true"
+    tags:
+      - taskbar
+      - ubuntu
+
+  - name: Make taskbar not extend to edges
+    command: 
+      argv: 
+        - gsettings 
+        - set 
+        - org.gnome.shell
+        - edge-tiling 
+        - "false"
+    tags:
+      - taskbar
+      - ubuntu
+
+  - name: Set taskbar to be transparent
+    command: 
+      argv: 
+        - gsettings 
+        - set 
+        - org.gnome.shell
+        - enable-hot-corners 
+        - "false"
+    tags:
+      - taskbar
+      - ubuntu

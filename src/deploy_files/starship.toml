@@ -1,0 +1,9 @@
+# Disable the <python> module, so it doesn't say "via 🐍 v3.10.6"
+[python]
+disabled = true
+
+[vagrant]
+disabled = true
+
+# Inserts a blank line between shell prompts
+add_newline = true

@@ -1,0 +1,6 @@
+.vagrant/
+.vagrantuser
+src/ansible/roles
+src/ansible/wip
+src/ansible/ansible_playbooks.yaml
+src/ansible/tester.yaml

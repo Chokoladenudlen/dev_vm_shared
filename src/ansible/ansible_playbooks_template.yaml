@@ -1,0 +1,19 @@
+---
+# This is a gathering point for all Ansible playbooks for this project.
+
+- name: Provision with Ansible
+  hosts: all
+
+  tasks:
+
+- import_playbook: ubuntu_desktop.yaml
+- import_playbook: ubuntu_user.yaml
+
+- import_playbook: firefox.yaml
+- import_playbook: terminals.yaml
+- import_playbook: commanders.yaml
+- import_playbook: git.yaml
+- import_playbook: git-starship.yaml
+- import_playbook: bash.yaml
+- import_playbook: docker.yaml
+- import_playbook: vscode.yaml

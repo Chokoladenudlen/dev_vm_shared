@@ -1,0 +1,9 @@
+- name: Install Firefox
+  hosts: all
+
+  tasks:
+
+  - name: snap install Firefox
+    snap:
+      name: firefox
+    become: true

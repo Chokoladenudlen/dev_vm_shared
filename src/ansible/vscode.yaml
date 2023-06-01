@@ -1,0 +1,50 @@
+---
+- name: Install VS Code + extensions
+# Want to add extensions to this list? Show the [package names?] of your
+# currently installed extensions with  code --list-extensions
+  hosts: all
+  vars:
+    user: "{{ lookup('env', 'USER') }}" # default to current user
+    extensions:
+      - bmpenuelas.waveform-render
+      - dracula-theme.theme-dracula
+      - eamodio.gitlens  # MLfav
+      - GitHub.copilot
+      - hashicorp.hcl  # MLfav
+      - jebbs.plantuml
+      - mhutchie.git-graph  # MLfav
+      - ms-azuretools.vscode-docker
+      - ms-python.isort
+      - ms-python.python
+      - ms-python.vscode-pylance
+      - ms-vscode-remote.remote-ssh
+      - ms-vscode-remote.remote-ssh-edit
+      - ms-vscode.makefile-tools
+      - ms-vscode.remote-explorer
+      - ramyaraoa.show-offset  ## Show no. chars fra filstart
+      - spmeesseman.vscode-taskexplorer
+      # - alefragnani.pascal
+      # - ms-toolsai.jupyter
+      # - ms-toolsai.jupyter-keymap
+      # - ms-toolsai.jupyter-renderers
+      # - ms-toolsai.vscode-jupyter-cell-tags
+      # - ms-toolsai.vscode-jupyter-slideshow
+
+
+  tasks:
+  - name: Install VS Code
+    snap:
+      name: code
+      classic: true
+    become: true
+
+  - name: "Install extensions for user: {{ user }}"
+    ansible.builtin.command: 
+      cmd: "code --install-extension {{ item }}"
+      # cmd: "code --uninstall-extension {{ item }}"
+    loop: "{{ extensions }}"
+    #FIXME: Need way to not loop when extensions is empty
+    become: true
+    become_user: "{{ user }}"
+    register: extinstall
+    changed_when: "'already installed' not in extinstall.stdout"
